@@ -14,3 +14,4 @@ Basic to do website where you can list down your day to day tasks.
 - add task
 - delete task
 - clear all tasks
+- mark done tasks
