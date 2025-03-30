@@ -1,5 +1,5 @@
 let toDos = JSON.parse(localStorage.getItem("to-dos")) || [];
-
+let completedTasks = 0;
 initialize();
 
 // add event listener
@@ -12,14 +12,23 @@ document.querySelector("#input-box").addEventListener("keypress", (event) => {
 function initialize() {
   toDos.forEach((item, index) => {
     createComponent(index, item.title);
+    if (item.completed) {
+      completedTasks++;
+    }
   });
+  if (toDos.length > 0) {
+    updateStatus();
+  }
 }
 
 function clearTasks() {
   localStorage.clear();
   toDos = [];
+  completedTasks = 0;
   document.querySelector("input").value = "";
   document.querySelector(".tasks").innerHTML = "";
+  document.querySelector("#progress-span").innerHTML = "Progress Status :- 0%";
+  document.querySelector("#progress-status").style.width = "0%";
 }
 
 function addToDo() {
@@ -32,6 +41,7 @@ function addToDo() {
     title: curInputValue,
     completed: false,
   });
+  updateStatus();
   localStorage.setItem("to-dos", JSON.stringify(toDos));
   document.querySelector("input").value = "";
   render();
@@ -70,10 +80,13 @@ function createComponent(index, taskTitle) {
     div.appendChild(doneButton);
     // add event listener
     doneButton.addEventListener("click", () => {
+      const allTasks = document.querySelectorAll(".task-metadata");
+      const index = Array.from(allTasks).indexOf(div);
       doneButton.parentNode.removeChild(doneButton);
       toDos[index].completed = true;
       span.style.textDecoration = "line-through";
-
+      completedTasks++;
+      updateStatus();
       localStorage.setItem("to-dos", JSON.stringify(toDos));
       return;
     });
@@ -86,11 +99,24 @@ function createComponent(index, taskTitle) {
   document.querySelector(".tasks").appendChild(div);
 
   deleteButton.addEventListener("click", () => {
+    const allTasks = document.querySelectorAll(".task-metadata");
+    const index = Array.from(allTasks).indexOf(div);
+    if (toDos[index].completed) {
+      completedTasks--;
+    }
     toDos = toDos.filter((item, ind) => ind !== index);
     div.parentNode.removeChild(div);
-
+    updateStatus();
     localStorage.setItem("to-dos", JSON.stringify(toDos));
     return;
   });
   return div;
+}
+
+function updateStatus() {
+  const progress = ((completedTasks / toDos.length) * 100).toFixed(0);
+  const progressSpan = document.querySelector("#progress-span");
+  progressSpan.innerHTML = `Progress Status :- ${progress}%`;
+  const progressStatus = document.querySelector("#progress-status");
+  progressStatus.style.width = `${progress}%`;
 }
