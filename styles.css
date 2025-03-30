@@ -13,12 +13,49 @@ body {
 
 .navbar {
   display: flex;
-  gap: 40rem;
+  flex-direction: column;
+  gap: 1rem;
+  /* align-items: center; */
+}
+
+.progress-container {
+  display: flex;
+  /* flex-direction: column; */
+  gap: 1rem;
+}
+
+#progress-span {
+  color: white;
+  background-color: black;
+  padding: 0.625rem;
+  width: fit-content;
+  align-self: center;
+  border-radius: 0.625rem;
+}
+
+#progress-bar {
+  border: 2px solid black;
+  width: 40rem;
+  height: 2.5rem;
+  border-radius: 1rem;
+  /* background-image: linear-gradient(to right, green 20%, rgba(0, 0, 0, 0) 20%); */
+}
+
+#progress-status {
+  border-radius: inherit;
+  background-color: green;
+  height: 100%;
+  width: 0rem;
+  transition: width 0.3s ease-in-out;
 }
 
 #theme-button {
   width: 5rem;
   height: 5rem;
+}
+
+#input-box {
+  border: 2px solid black;
 }
 
 .task-completed-button {

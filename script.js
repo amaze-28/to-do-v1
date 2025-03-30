@@ -1,5 +1,5 @@
 let toDos = JSON.parse(localStorage.getItem("to-dos")) || [];
-
+let completedTasks = 0;
 initialize();
 
 // add event listener
@@ -12,7 +12,13 @@ document.querySelector("#input-box").addEventListener("keypress", (event) => {
 function initialize() {
   toDos.forEach((item, index) => {
     createComponent(index, item.title);
+    if (item.completed) {
+      completedTasks++;
+    }
   });
+  if (toDos.length > 0) {
+    updateStatus();
+  }
 }
 
 function clearTasks() {
@@ -32,6 +38,7 @@ function addToDo() {
     title: curInputValue,
     completed: false,
   });
+  updateStatus();
   localStorage.setItem("to-dos", JSON.stringify(toDos));
   document.querySelector("input").value = "";
   render();
@@ -73,7 +80,8 @@ function createComponent(index, taskTitle) {
       doneButton.parentNode.removeChild(doneButton);
       toDos[index].completed = true;
       span.style.textDecoration = "line-through";
-
+      completedTasks++;
+      updateStatus();
       localStorage.setItem("to-dos", JSON.stringify(toDos));
       return;
     });
@@ -86,11 +94,22 @@ function createComponent(index, taskTitle) {
   document.querySelector(".tasks").appendChild(div);
 
   deleteButton.addEventListener("click", () => {
+    if (toDos[index].completed) {
+      completedTasks--;
+    }
     toDos = toDos.filter((item, ind) => ind !== index);
     div.parentNode.removeChild(div);
-
+    updateStatus();
     localStorage.setItem("to-dos", JSON.stringify(toDos));
     return;
   });
   return div;
+}
+
+function updateStatus() {
+  const progress = ((completedTasks / toDos.length) * 100).toFixed(0);
+  const progressSpan = document.querySelector("#progress-span");
+  progressSpan.innerHTML = `Progress :- ${progress}%`;
+  const progressStatus = document.querySelector("#progress-status");
+  progressStatus.style.width = `${progress}%`;
 }
