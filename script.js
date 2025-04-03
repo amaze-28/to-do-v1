@@ -114,7 +114,8 @@ function createComponent(index, taskTitle) {
 }
 
 function updateStatus() {
-  const progress = ((completedTasks / toDos.length) * 100).toFixed(0);
+  const progress =
+    toDos.length === 0 ? 0 : ((completedTasks / toDos.length) * 100).toFixed(0);
   const progressSpan = document.querySelector("#progress-span");
   progressSpan.innerHTML = `Progress Status :- ${progress}%`;
   const progressStatus = document.querySelector("#progress-status");
